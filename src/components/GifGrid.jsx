@@ -50,10 +50,14 @@ class GifGrid extends Component {
             <GridList
               cellHeight={'auto'}
               className={classes.gridList}
-              cols={getGridListCols}
+              cols={getGridListCols()}
             >
               {gifs.map(gif => {
-                let image = gif.images && gif.images.fixed_height.url;
+                let image =
+                  gif.images &&
+                  gif.images.original.height > gif.images.original.width
+                    ? gif.images.fixed_width_downsampled.url
+                    : gif.images.fixed_height_downsampled.url;
                 return (
                   <GridListTile key={gif.image} cols={gif.cols || 1}>
                     <img src={image} alt={gif.title} />
