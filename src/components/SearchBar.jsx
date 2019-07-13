@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
 import GifGrid from './GifGrid';
 import { GiphyService } from '../services';
 import { Validation } from '../helpers';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -22,6 +24,8 @@ class SearchBar extends Component {
     title: 'Trending',
     limit: 20,
     offset: 0,
+    query: null,
+    isLoading: true,
   };
   componentWillMount() {
     this.setState({ classes: useStyles });
@@ -30,6 +34,7 @@ class SearchBar extends Component {
 
   async getGifs(query) {
     let { limit, offset } = this.state;
+    this.setState({ isLoading: true });
     try {
       let response = await GiphyService.gifSearch({
         q: query,
@@ -40,7 +45,15 @@ class SearchBar extends Component {
         let data = response.data && response.data.data;
         this.setState({
           gifs: data,
-          title: query ? 'Showing ' + query + ' GIFs' : 'Search for GIFs',
+          title: query
+            ? 'Showing  ' +
+              limit +
+              ' ' +
+              query +
+              ' GIFs' +
+              this.getCurrentPage()
+            : 'Search for GIFs',
+          isLoading: false,
         });
       }
     } catch (error) {
@@ -50,11 +63,16 @@ class SearchBar extends Component {
 
   async getTrendingGifs() {
     let { limit, offset } = this.state;
+    this.setState({ isLoading: true });
     try {
       let response = await GiphyService.getTrending({ limit, offset });
       if (response && response.status === 200) {
         let data = response.data && response.data.data;
-        this.setState({ gifs: data, title: 'Showing Trending GIFs' });
+        this.setState({
+          gifs: data,
+          title: 'Showing ' + limit + ' Trending GIFs' + this.getCurrentPage(),
+          isLoading: false,
+        });
       }
     } catch (error) {
       console.error(error);
@@ -78,31 +96,113 @@ class SearchBar extends Component {
     this.setState({
       [name]: value,
       [name + 'State']: state,
+      offset: 0,
     });
 
     this.getGifs(value);
   }
 
+  pageUp() {
+    const { limit, offset, query } = this.state;
+    this.setState({ offset: offset + limit });
+    if (query) {
+      this.getGifs(query);
+    } else {
+      this.getTrendingGifs();
+    }
+  }
+
+  pageDown() {
+    const { limit, offset, query } = this.state;
+    this.setState({ offset: offset % limit === 0 ? offset - limit : 0 });
+    if (query) {
+      this.getGifs(query);
+    } else {
+      this.getTrendingGifs();
+    }
+  }
+
+  setFirstPage() {
+    const { query } = this.state;
+    this.setState({ offset: 0 });
+    if (query) {
+      this.getGifs(query);
+    } else {
+      this.getTrendingGifs();
+    }
+  }
+
+  clearSearch() {
+    this.setState({ limit: 20, offset: 0, query: null });
+    this.getTrendingGifs();
+  }
+
+  getCurrentPage() {
+    const { limit, offset } = this.state;
+    const pageNumber = offset / limit + 1;
+    return pageNumber > 1 ? ' - Page ' + pageNumber : '';
+  }
+
   render() {
-    let { classes, gifs, title, queryState } = this.state;
+    let {
+      classes,
+      gifs,
+      title,
+      queryState,
+      offset,
+      limit,
+      isLoading,
+      query,
+    } = this.state;
     return (
       <div className={classes.container}>
-        <TextField
-          defaultValue=""
-          placeholder="Search for GIFs"
-          error={queryState === 'error'}
-          helperText={
-            queryState === 'error' ? 'Please type something to search' : ''
-          }
-          className={classes.input}
-          inputProps={{
-            'aria-label': 'Search',
-          }}
-          name="query"
-          fullWidth
-          onChange={this.onChange.bind(this)}
-        />
-        <GifGrid title={title} gifs={gifs} />
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <TextField
+              defaultValue=""
+              placeholder="Search for GIFs"
+              error={queryState === 'error'}
+              helperText={
+                queryState === 'error' ? 'Please type something to search' : ''
+              }
+              className={classes.input}
+              inputProps={{
+                'aria-label': 'Search',
+              }}
+              name="query"
+              fullWidth
+              onChange={this.onChange.bind(this)}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              disabled={offset === 0}
+              onClick={this.setFirstPage.bind(this)}
+            >
+              First Page
+            </Button>
+            <Button disabled={offset === 0} onClick={this.pageDown.bind(this)}>
+              Prev Page
+            </Button>
+            <Button
+              disabled={gifs && gifs.length < limit}
+              onClick={this.pageUp.bind(this)}
+            >
+              Next Page
+            </Button>
+            <Button
+              disabled={query === null}
+              onClick={this.clearSearch.bind(this)}
+              style={query === null ? { color: 'gray' } : { color: 'red' }}
+              variant="outlined"
+            >
+              Reset
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            {isLoading ? 'LOADING...' : <GifGrid title={title} gifs={gifs} />}
+          </Grid>
+        </Grid>
       </div>
     );
   }
