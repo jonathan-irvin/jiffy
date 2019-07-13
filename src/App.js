@@ -21,7 +21,7 @@ class App extends Component {
           user={user}
           firebaseAppAuth={firebaseAppAuth}
         />
-        <Grid container spacing={8} justify="center" style={{ marginTop: 24 }}>
+        <Grid container spacing={8} justify="center" style={{ margin: 24 }}>
           <Grid item xs={12}>
             <SearchBar />
           </Grid>
