@@ -21,11 +21,13 @@ class App extends Component {
           user={user}
           firebaseAppAuth={firebaseAppAuth}
         />
-        <Grid container spacing={8} justify="center" style={{ margin: 24 }}>
-          <Grid item xs={12}>
-            <SearchBar />
+        <div style={{ margin: 12 }}>
+          <Grid container spacing={8} justify="center">
+            <Grid item xs={12}>
+              <SearchBar />
+            </Grid>
           </Grid>
-        </Grid>
+        </div>
       </div>
     );
   }

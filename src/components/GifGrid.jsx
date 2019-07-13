@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,18 +28,22 @@ class GifGrid extends Component {
     let { gifs, width } = this.props;
     const getGridListCols = () => {
       if (isWidthUp('xl', width)) {
-        return 4;
+        return 6;
       }
 
       if (isWidthUp('lg', width)) {
-        return 3;
+        return 5;
       }
 
       if (isWidthUp('md', width)) {
+        return 3;
+      }
+
+      if (isWidthUp('sm', width)) {
         return 2;
       }
 
-      return 1;
+      return 2;
     };
     return (
       <div style={{ marginTop: 24 }}>
@@ -60,7 +64,13 @@ class GifGrid extends Component {
                     : gif.images.fixed_height_downsampled.url;
                 return (
                   <GridListTile key={gif.image} cols={gif.cols || 1}>
-                    <img src={image} alt={gif.title} />
+                    <Button
+                      onClick={() => {
+                        return alert('Saved');
+                      }}
+                    >
+                      <img src={image} alt={gif.title} />
+                    </Button>
                   </GridListTile>
                 );
               })}

@@ -157,7 +157,7 @@ class SearchBar extends Component {
     return (
       <div className={classes.container}>
         <Grid container spacing={1}>
-          <Grid item xs={3}>
+          <Grid item xs={12} sm={12} md={6} lg={4}>
             <TextField
               defaultValue=""
               placeholder="Search for GIFs"
@@ -174,7 +174,7 @@ class SearchBar extends Component {
               onChange={this.onChange.bind(this)}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12} sm={12} md={6} lg={8}>
             <Button
               disabled={offset === 0}
               onClick={this.setFirstPage.bind(this)}
