@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 import GifGrid from './GifGrid';
 import { GiphyService } from '../services';
+import { Validation } from '../helpers';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -30,10 +31,17 @@ class SearchBar extends Component {
   async getGifs(query) {
     let { limit, offset } = this.state;
     try {
-      let response = await GiphyService.gifSearch({ q: query, limit, offset });
+      let response = await GiphyService.gifSearch({
+        q: query,
+        limit,
+        offset,
+      });
       if (response && response.status === 200) {
         let data = response.data && response.data.data;
-        this.setState({ gifs: data, title: query + ' GIFs' });
+        this.setState({
+          gifs: data,
+          title: query ? 'Showing ' + query + ' GIFs' : 'Search for GIFs',
+        });
       }
     } catch (error) {
       console.error(error);
@@ -46,7 +54,7 @@ class SearchBar extends Component {
       let response = await GiphyService.getTrending({ limit, offset });
       if (response && response.status === 200) {
         let data = response.data && response.data.data;
-        this.setState({ gifs: data, title: 'Trending' });
+        this.setState({ gifs: data, title: 'Showing Trending GIFs' });
       }
     } catch (error) {
       console.error(error);
@@ -58,20 +66,34 @@ class SearchBar extends Component {
     const name = event.target.name,
       value = event.target.value;
 
+    switch (name) {
+      case 'query':
+        state = Validation.verifyLength(value, 1) ? 'success' : 'error';
+
+        break;
+      default:
+        break;
+    }
+
     this.setState({
       [name]: value,
+      [name + 'State']: state,
     });
 
     this.getGifs(value);
   }
 
   render() {
-    let { classes, gifs, title } = this.state;
+    let { classes, gifs, title, queryState } = this.state;
     return (
       <div className={classes.container}>
-        <Input
+        <TextField
           defaultValue=""
           placeholder="Search for GIFs"
+          error={queryState === 'error'}
+          helperText={
+            queryState === 'error' ? 'Please type something to search' : ''
+          }
           className={classes.input}
           inputProps={{
             'aria-label': 'Search',

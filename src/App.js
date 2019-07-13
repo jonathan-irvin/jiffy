@@ -10,43 +10,8 @@ import { Grid } from '@material-ui/core';
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 class App extends Component {
-  // state = {
-  //   gifs: null,
-  // };
-
-  // componentWillMount() {
-  //   this.getTrendingGifs(20, 0);
-  // }
-
-  // async getGifs(query, limit, offset) {
-  //   try {
-  //     let response = await GiphyService.gifSearch({ q: query, limit, offset });
-  //     if (response && response.status === 200) {
-  //       let data = response.data && response.data.data;
-  //       this.setState({ gifs: data });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  // async getTrendingGifs(limit, offset) {
-  //   try {
-  //     let response = await GiphyService.getTrending({ limit, offset });
-  //     if (response && response.status === 200) {
-  //       let data = response.data && response.data.data;
-  //       this.setState({ gifs: data });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
   render() {
     const { user, signOut, signInWithGoogle } = this.props;
-    // let { gifs } = this.state;
-    // let userId = user && user.uid;
-    // console.log(gifs);
 
     return (
       <div>
@@ -62,12 +27,6 @@ class App extends Component {
           </Grid>
         </Grid>
       </div>
-
-      // {/* {gifs &&
-      //   gifs.map(gif => {
-      //     let image = gif.images && gif.images.downsized_medium.url;
-      //     return <img src={image} alt={gif.title} />;
-      //   })} */}
     );
   }
 }
