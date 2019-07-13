@@ -18,19 +18,25 @@ const GIF_COLLECTION = 'gifs';
 app.post('/gif', async (request, response) => {
   try {
     const { userId, gifData } = request.body;
-    if (!userId) throw new Error('userId is required');
-    if (!gifData) throw new Error('gifData is required');
-    const data = {
-      userId,
-      gifData,
-    };
-    const gifRef = await db.collection(GIF_COLLECTION).add(data);
-    const gif = await gifRef.get();
+    if (!userId) {
+      response.status(400).send('Missing userId');
+    } else if (!gifData) {
+      response.status(400).send('Missing gifData');
+    } else {
+      const data = {
+        userId,
+        gifData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const gifRef = await db.collection(GIF_COLLECTION).add(data);
+      const gif = await gifRef.get();
 
-    response.json({
-      id: gifRef.id,
-      data: gif.data(),
-    });
+      response.json({
+        id: gifRef.id,
+        data: gif.data(),
+      });
+    }
   } catch (error) {
     response.status(500).send(error);
   }
@@ -40,7 +46,9 @@ app.get('/gif/:id', async (request, response) => {
   try {
     const gifId = request.params.id;
 
-    if (!gifId) throw new Error('GIF ID is required');
+    if (!gifId) {
+      response.status(400).send('Missing GIF id');
+    }
 
     const gif = await db
       .collection(GIF_COLLECTION)
@@ -48,7 +56,7 @@ app.get('/gif/:id', async (request, response) => {
       .get();
 
     if (!gif.exists) {
-      throw new Error('GIF doesnt exist.');
+      response.status(404).send('GIF doesnt exist.');
     }
 
     response.json({
@@ -82,22 +90,25 @@ app.put('/gif/:id', async (request, response) => {
     const gifId = request.params.id;
     const gifData = request.body.gifData;
 
-    if (!gifId) throw new Error('id is blank');
+    if (!gifId) {
+      response.status(400).send('Missing GIF id');
+    } else if (!gifData) {
+      response.status(400).send('gifData is required');
+    } else {
+      const data = {
+        gifData,
+        updatedAt: new Date(),
+      };
+      await db
+        .collection(GIF_COLLECTION)
+        .doc(gifId)
+        .set(data, { merge: true });
 
-    if (!gifData) throw new Error('gifData is required');
-
-    const data = {
-      gifData,
-    };
-    await db
-      .collection(GIF_COLLECTION)
-      .doc(gifId)
-      .set(data, { merge: true });
-
-    response.json({
-      id: gifId,
-      data,
-    });
+      response.json({
+        id: gifId,
+        data,
+      });
+    }
   } catch (error) {
     response.status(500).send(error);
   }
@@ -107,16 +118,18 @@ app.delete('/gif/:id', async (request, response) => {
   try {
     const gifId = request.params.id;
 
-    if (!gifId) throw new Error('id is blank');
+    if (!gifId) {
+      response.status(400).send('Missing GIF id');
+    } else {
+      await db
+        .collection(GIF_COLLECTION)
+        .doc(gifId)
+        .delete();
 
-    await db
-      .collection(GIF_COLLECTION)
-      .doc(gifId)
-      .delete();
-
-    response.json({
-      id: gifId,
-    });
+      response.json({
+        id: gifId,
+      });
+    }
   } catch (error) {
     response.status(500).send(error);
   }
