@@ -7,3 +7,4 @@ lib/
 typings/
 
 node_modules/
+*.log
