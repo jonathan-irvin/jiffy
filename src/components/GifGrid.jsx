@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import LazyLoad from 'react-lazy-load';
 import { GifService } from '../services';
+import GifDialog from './GifDialog';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -26,24 +27,9 @@ class GifGrid extends Component {
     this.setState({ classes: useStyles });
   }
 
-  async saveGifToInventory(gif) {
-    const { user } = this.props;
-
-    this.setState({ isLoading: true });
-    try {
-      let response = await GifService.addGifToProfile(user.uid, gif);
-      if (response && response.status === 200) {
-        let data = response.data;
-        console.log('Gif Saved to Profile', data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   render() {
     let { classes } = this.state;
-    let { gifs, width, isProfile } = this.props;
+    let { gifs, user, width, isProfile } = this.props;
     if (isProfile) {
       gifs = gifs.map(gif => gif.gifData);
     }
@@ -78,29 +64,9 @@ class GifGrid extends Component {
               cols={getGridListCols()}
             >
               {gifs.map(gif => {
-                let image =
-                  gif.images &&
-                  gif.images.original.height > gif.images.original.width
-                    ? gif.images.fixed_width_downsampled.url
-                    : gif.images.fixed_height_downsampled.url;
-
-                let width =
-                  gif.images &&
-                  gif.images.original.height > gif.images.original.width
-                    ? gif.images.fixed_width_downsampled.width
-                    : gif.images.fixed_height_downsampled.width;
-                let height =
-                  gif.images &&
-                  gif.images.original.height > gif.images.original.width
-                    ? gif.images.fixed_width_downsampled.height
-                    : gif.images.fixed_height_downsampled.height;
                 return (
                   <GridListTile key={gif.id} cols={gif.cols || 1}>
-                    <Button onClick={this.saveGifToInventory.bind(this, gif)}>
-                      <LazyLoad height={height} width={width}>
-                        <img src={image} alt={gif.title} />
-                      </LazyLoad>
-                    </Button>
+                    <GifDialog gif={gif} isProfile={isProfile} user={user} />
                   </GridListTile>
                 );
               })}

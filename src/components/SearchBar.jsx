@@ -100,9 +100,9 @@ class SearchBar extends Component {
     this.getGifs(value);
   }
 
-  pageUp() {
+  async pageUp() {
     const { limit, offset, query } = this.state;
-    this.setState({ offset: offset + limit });
+    await this.setState({ offset: offset + limit });
     if (query) {
       this.getGifs(query);
     } else {
@@ -110,9 +110,9 @@ class SearchBar extends Component {
     }
   }
 
-  pageDown() {
+  async pageDown() {
     const { limit, offset, query } = this.state;
-    this.setState({ offset: offset % limit === 0 ? offset - limit : 0 });
+    await this.setState({ offset: offset % limit === 0 ? offset - limit : 0 });
     if (query) {
       this.getGifs(query);
     } else {
