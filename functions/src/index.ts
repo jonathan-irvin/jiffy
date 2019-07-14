@@ -14,8 +14,8 @@ const cors = require('cors')({ origin: true });
 main.use('/api/v1', app);
 main.use(bodyParser.json());
 
-app.use(cors({ origin: true }));
-main.use(cors({ origin: true }));
+app.use(cors);
+main.use(cors);
 export const webApi = functions.https.onRequest(main);
 
 //Handy Constants
@@ -78,19 +78,13 @@ app.get('/gif/:id', async (request, response) => {
 
 //Get all GIFs
 app.get('/gifs', async (request, response) => {
-  const { limit, skip, orderBy, direction } = request.params;
   try {
-    const gifQuerySnapshot = await db
-      .collection(GIF_COLLECTION)
-      .orderBy(orderBy || 'createdAt', direction || 'desc')
-      .limit(limit || 20)
-      .startAt(skip || 0)
-      .get();
+    const gifQuerySnapshot = await db.collection(GIF_COLLECTION).get();
     const gifs: any = [];
     gifQuerySnapshot.forEach(doc => {
       gifs.push({
         id: doc.id,
-        data: doc.data(),
+        ...doc.data(),
       });
     });
 
