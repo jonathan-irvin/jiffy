@@ -3,7 +3,10 @@ const BASEURL = process.env.REACT_APP_API_BASEURL;
 export default class GifService {
   static async addGifToProfile(userId, gifData) {
     try {
-      return await axios.post(BASEURL + 'gif', { userId, gifData });
+      return await axios.post(BASEURL + 'gif', {
+        userId: userId,
+        gifData: gifData,
+      });
     } catch (e) {
       throw e;
     }
@@ -27,7 +30,7 @@ export default class GifService {
 
   static async updateGif(id, gifData) {
     try {
-      return await axios.put(BASEURL + 'gif/' + id, { gifData });
+      return await axios.put(BASEURL + 'gif/' + id, { gifData: gifData });
     } catch (e) {
       throw e;
     }

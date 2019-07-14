@@ -28,12 +28,13 @@ class GifGrid extends Component {
 
   async saveGifToInventory(gif) {
     const { user } = this.props;
+    const payload = {
+      userId: user.uid,
+      gifData: gif,
+    };
     this.setState({ isLoading: true });
     try {
-      let response = await GifService.addGifToProfile({
-        userId: user.uid,
-        gifData: gif,
-      });
+      let response = await GifService.addGifToProfile(payload);
       if (response && response.status === 200) {
         let data = response.data;
         console.log('Gif Saved to Profile', data);
@@ -95,7 +96,7 @@ class GifGrid extends Component {
                     : gif.images.fixed_height_downsampled.height;
                 return (
                   <GridListTile key={gif.image} cols={gif.cols || 1}>
-                    <Button onClick={this.saveGifToInventory.bind(this)}>
+                    <Button onClick={this.saveGifToInventory.bind(this, gif)}>
                       <LazyLoad height={height} width={width}>
                         <img src={image} alt={gif.title} />
                       </LazyLoad>

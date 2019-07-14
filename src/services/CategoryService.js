@@ -4,9 +4,9 @@ export default class CategoryService {
   static async createCategory(userId, categoryName, gifs) {
     try {
       return await axios.post(BASEURL + 'category', {
-        userId,
-        categoryName,
-        gifs,
+        userId: userId,
+        categoryName: categoryName,
+        gifs: gifs,
       });
     } catch (e) {
       throw e;
@@ -32,8 +32,8 @@ export default class CategoryService {
   static async updateCategory(id, categoryName, gifs) {
     try {
       return await axios.put(BASEURL + 'category/' + id, {
-        categoryName,
-        gifs,
+        categoryName: categoryName,
+        gifs: gifs,
       });
     } catch (e) {
       throw e;
