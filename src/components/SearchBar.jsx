@@ -25,8 +25,8 @@ class SearchBar extends Component {
     limit: 20,
     offset: 0,
     query: null,
-    isLoading: true,
   };
+
   componentWillMount() {
     this.setState({ classes: useStyles });
     this.getTrendingGifs(20, 0);
@@ -34,7 +34,7 @@ class SearchBar extends Component {
 
   async getGifs(query) {
     let { limit, offset } = this.state;
-    this.setState({ isLoading: true });
+
     try {
       let response = await GiphyService.gifSearch({
         q: query,
@@ -53,7 +53,6 @@ class SearchBar extends Component {
               ' GIFs' +
               this.getCurrentPage()
             : 'Search for GIFs',
-          isLoading: false,
         });
       }
     } catch (error) {
@@ -63,7 +62,7 @@ class SearchBar extends Component {
 
   async getTrendingGifs() {
     let { limit, offset } = this.state;
-    this.setState({ isLoading: true });
+
     try {
       let response = await GiphyService.getTrending({ limit, offset });
       if (response && response.status === 200) {
@@ -71,7 +70,6 @@ class SearchBar extends Component {
         this.setState({
           gifs: data,
           title: 'Showing ' + limit + ' Trending GIFs' + this.getCurrentPage(),
-          isLoading: false,
         });
       }
     } catch (error) {
@@ -151,7 +149,7 @@ class SearchBar extends Component {
       queryState,
       offset,
       limit,
-      isLoading,
+
       query,
     } = this.state;
     return (
@@ -200,11 +198,7 @@ class SearchBar extends Component {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            {isLoading ? (
-              'LOADING...'
-            ) : (
-              <GifGrid title={title} gifs={gifs} user={this.props.user} />
-            )}
+            <GifGrid title={title} gifs={gifs} user={this.props.user} />
           </Grid>
         </Grid>
       </div>

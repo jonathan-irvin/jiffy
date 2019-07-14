@@ -20,9 +20,17 @@ export default class GifService {
     }
   }
 
-  static async getAllGifs(id) {
+  static async getAllGifs() {
     try {
       return await axios.get(BASEURL + 'gifs');
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static async getAllGifsByOwner(id) {
+    try {
+      return await axios.get(BASEURL + 'gifs/' + id);
     } catch (e) {
       throw e;
     }

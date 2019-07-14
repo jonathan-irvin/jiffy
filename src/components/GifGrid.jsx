@@ -43,7 +43,10 @@ class GifGrid extends Component {
 
   render() {
     let { classes } = this.state;
-    let { gifs, width } = this.props;
+    let { gifs, width, isProfile } = this.props;
+    if (isProfile) {
+      gifs = gifs.map(gif => gif.gifData);
+    }
     const getGridListCols = () => {
       if (isWidthUp('xl', width)) {
         return 6;
@@ -92,7 +95,7 @@ class GifGrid extends Component {
                     ? gif.images.fixed_width_downsampled.height
                     : gif.images.fixed_height_downsampled.height;
                 return (
-                  <GridListTile key={gif.image} cols={gif.cols || 1}>
+                  <GridListTile key={gif.id} cols={gif.cols || 1}>
                     <Button onClick={this.saveGifToInventory.bind(this, gif)}>
                       <LazyLoad height={height} width={width}>
                         <img src={image} alt={gif.title} />
