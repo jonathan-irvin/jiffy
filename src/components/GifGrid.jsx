@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Typography, Button } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import { makeStyles } from '@material-ui/core/styles';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
-import LazyLoad from 'react-lazy-load';
-import { GifService } from '../services';
+
 import GifDialog from './GifDialog';
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,16 +29,14 @@ class GifGrid extends Component {
   render() {
     let { classes } = this.state;
     let { gifs, user, width, isProfile } = this.props;
-    if (isProfile) {
-      gifs = gifs.map(gif => gif.gifData);
-    }
+
     const getGridListCols = () => {
       if (isWidthUp('xl', width)) {
         return 6;
       }
 
       if (isWidthUp('lg', width)) {
-        return 5;
+        return 4;
       }
 
       if (isWidthUp('md', width)) {
@@ -50,7 +47,7 @@ class GifGrid extends Component {
         return 2;
       }
 
-      return 2;
+      return 1;
     };
     return (
       <div style={{ marginTop: 24 }}>
@@ -66,7 +63,12 @@ class GifGrid extends Component {
               {gifs.map(gif => {
                 return (
                   <GridListTile key={gif.id} cols={gif.cols || 1}>
-                    <GifDialog gif={gif} isProfile={isProfile} user={user} />
+                    <GifDialog
+                      gif={isProfile ? gif.gifData : gif}
+                      gifId={isProfile && gif.id}
+                      isProfile={isProfile}
+                      user={user}
+                    />
                   </GridListTile>
                 );
               })}

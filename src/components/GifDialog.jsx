@@ -23,7 +23,7 @@ class GifDialogRaw extends React.Component {
   handleEntering = () => {};
 
   handleCancel = () => {
-    this.props.onClose(this.props.gif);
+    this.props.onCancel(this.props.gif);
   };
 
   handleOk = () => {
@@ -43,6 +43,37 @@ class GifDialogRaw extends React.Component {
       if (response && response.status === 200) {
         let data = response.data;
         console.log('Gif Saved to Profile', data);
+        this.handleOk();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async removeGifFromInventory(id) {
+    this.setState({ isLoading: true });
+    try {
+      let response = await GifService.deleteGif(id);
+      if (response && response.status === 200) {
+        let data = response.data;
+        console.log('Gif removed from profile', data);
+        this.handleOk();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async saveGifToCategory(gif) {
+    const { user } = this.props;
+
+    this.setState({ isLoading: true });
+    try {
+      let response = await CategoryService.addGifToProfile(user.uid, gif);
+      if (response && response.status === 200) {
+        let data = response.data;
+        console.log('Gif Saved to Profile', data);
+        this.handleOk();
       }
     } catch (error) {
       console.error(error);
@@ -56,7 +87,8 @@ class GifDialogRaw extends React.Component {
   }
 
   render() {
-    const { gif, isProfile, ...other } = this.props;
+    const { gif, gifId, isProfile, ...other } = this.props;
+
     return (
       <Dialog
         maxWidth="md"
@@ -78,7 +110,12 @@ class GifDialogRaw extends React.Component {
         </DialogContent>
         <DialogActions>
           {isProfile ? (
-            'Category'
+            <Button
+              onClick={this.removeGifFromInventory.bind(this, gifId)}
+              color="primary"
+            >
+              Remove
+            </Button>
           ) : (
             <Button
               onClick={this.saveGifToInventory.bind(this, gif)}
@@ -133,36 +170,46 @@ class GifDialog extends React.Component {
 
   handleClose = value => {
     this.setState({ value, open: false });
+    window.location.reload();
+  };
+  handleCancel = value => {
+    this.setState({ value, open: false });
   };
 
   render() {
-    const { classes, user, isProfile, gif } = this.props;
+    const { classes, user, isProfile, gif, gifId } = this.props;
 
     let image =
       gif.images && gif.images.original.height > gif.images.original.width
         ? gif.images.fixed_width_downsampled.url
         : gif.images.fixed_height_downsampled.url;
 
-    // let width =
-    //   gif.images &&
-    //   gif.images.original.height > gif.images.original.width
-    //     ? gif.images.fixed_width_downsampled.width
-    //     : gif.images.fixed_height_downsampled.width;
-    // let height =
-    //   gif.images &&
-    //   gif.images.original.height > gif.images.original.width
-    //     ? gif.images.fixed_width_downsampled.height
-    //     : gif.images.fixed_height_downsampled.height;
+    let width =
+      gif.images && gif.images.original.height > gif.images.original.width
+        ? gif.images.fixed_width_downsampled.width
+        : gif.images.fixed_height_downsampled.width;
+    let height =
+      gif.images && gif.images.original.height > gif.images.original.width
+        ? gif.images.fixed_width_downsampled.height
+        : gif.images.fixed_height_downsampled.height;
     return (
       gif && (
         <div className={classes.root}>
-          <img src={image} alt={'Gif'} onClick={this.handleClickListItem} />
+          <img
+            src={image}
+            alt={'Gif'}
+            onClick={this.handleClickListItem}
+            height={height}
+            width={width}
+          />
           <GifDialogRaw
             classes={{ paper: classes.paper }}
             open={this.state.open}
             onClose={this.handleClose}
+            onCancel={this.handleCancel}
             user={user}
             gif={gif}
+            gifId={gifId}
             isProfile={isProfile}
           />
         </div>
