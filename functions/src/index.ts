@@ -8,10 +8,14 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 const app = express();
 const main = express();
+const cors = require('cors')({ origin: true });
 
 //Create Service
 main.use('/api/v1', app);
 main.use(bodyParser.json());
+
+app.use(cors({ origin: true }));
+main.use(cors({ origin: true }));
 export const webApi = functions.https.onRequest(main);
 
 //Handy Constants
