@@ -28,13 +28,10 @@ class GifGrid extends Component {
 
   async saveGifToInventory(gif) {
     const { user } = this.props;
-    const payload = {
-      userId: user.uid,
-      gifData: gif,
-    };
+
     this.setState({ isLoading: true });
     try {
-      let response = await GifService.addGifToProfile(payload);
+      let response = await GifService.addGifToProfile(user.uid, gif);
       if (response && response.status === 200) {
         let data = response.data;
         console.log('Gif Saved to Profile', data);
