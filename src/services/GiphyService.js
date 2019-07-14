@@ -14,17 +14,6 @@ class GiphyService {
     }
   }
 
-  static async getRandomGif(params) {
-    let { tag } = params;
-    try {
-      return await axios.get(GIPHY_BASEURL + 'gifs/random', {
-        params: { api_key: GIPHY_API, tag },
-      });
-    } catch (e) {
-      throw e;
-    }
-  }
-
   static async getTrending(params) {
     let { limit, offset } = params;
     try {
