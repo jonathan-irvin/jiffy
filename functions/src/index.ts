@@ -72,11 +72,37 @@ app.get('/gif/:id', async (request, response) => {
   }
 });
 
+//Get all GIFs
 app.get('/gifs', async (request, response) => {
   const { limit, skip, orderBy, direction } = request.params;
   try {
     const gifQuerySnapshot = await db
       .collection(GIF_COLLECTION)
+      .orderBy(orderBy || 'createdAt', direction || 'desc')
+      .limit(limit || 20)
+      .startAt(skip || 0)
+      .get();
+    const gifs: any = [];
+    gifQuerySnapshot.forEach(doc => {
+      gifs.push({
+        id: doc.id,
+        data: doc.data(),
+      });
+    });
+
+    response.json(gifs);
+  } catch (error) {
+    response.status(500).send(error);
+  }
+});
+
+//Get Gifs for user
+app.get('/gifs/:uid', async (request, response) => {
+  const { limit, skip, orderBy, direction, uid } = request.params;
+  try {
+    const gifQuerySnapshot = await db
+      .collection(GIF_COLLECTION)
+      .where('userId', '==', uid)
       .orderBy(orderBy || 'createdAt', direction || 'desc')
       .limit(limit || 20)
       .startAt(skip || 0)
