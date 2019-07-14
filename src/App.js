@@ -6,7 +6,7 @@ import firebaseConfig from './firebaseConfig';
 
 import NavBar from './components/NavBar';
 import SearchBar from './components/SearchBar';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 class App extends Component {
@@ -22,11 +22,27 @@ class App extends Component {
           firebaseAppAuth={firebaseAppAuth}
         />
         <div style={{ margin: 12 }}>
-          <Grid container spacing={8} justify="center">
-            <Grid item xs={12}>
-              <SearchBar />
+          {user ? (
+            <Grid container spacing={8} justify="center">
+              <Grid item xs={12}>
+                <SearchBar user={user} />
+              </Grid>
             </Grid>
-          </Grid>
+          ) : (
+            <Grid
+              container
+              spacing={8}
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography align="center">
+                  Please sign in to save GIFs!
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
         </div>
       </div>
     );

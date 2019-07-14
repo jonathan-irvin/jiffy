@@ -200,7 +200,11 @@ class SearchBar extends Component {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            {isLoading ? 'LOADING...' : <GifGrid title={title} gifs={gifs} />}
+            {isLoading ? (
+              'LOADING...'
+            ) : (
+              <GifGrid title={title} gifs={gifs} user={this.props.user} />
+            )}
           </Grid>
         </Grid>
       </div>

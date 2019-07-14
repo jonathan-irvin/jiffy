@@ -10,6 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    height: '100%',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -36,15 +37,9 @@ function NavBar(props) {
             <MenuIcon />
           </IconButton>
 
-          {user ? (
-            <Typography variant="h6" className={classes.title}>
-              Jiffy: Hello, {user.displayName}
-            </Typography>
-          ) : (
-            <Typography variant="h6" className={classes.title}>
-              Jiffy
-            </Typography>
-          )}
+          <Typography variant="h6" className={classes.title}>
+            Jiffy
+          </Typography>
 
           {user ? (
             <Button color="inherit" variant="outlined" onClick={signOut}>
