@@ -120,9 +120,9 @@ class SearchBar extends Component {
     }
   }
 
-  setFirstPage() {
+  async setFirstPage() {
     const { query } = this.state;
-    this.setState({ offset: 0 });
+    await this.setState({ offset: 0 });
     if (query) {
       this.getGifs(query);
     } else {

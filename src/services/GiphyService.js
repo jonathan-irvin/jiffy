@@ -7,7 +7,7 @@ class GiphyService {
     let { q, limit, offset } = params;
     try {
       return await axios.get(GIPHY_BASEURL + 'gifs/search', {
-        params: { api_key: GIPHY_API, q, limit, offset },
+        params: { api_key: GIPHY_API, q, limit, offset, rating: 'g' },
       });
     } catch (e) {
       throw e;
@@ -18,7 +18,7 @@ class GiphyService {
     let { limit, offset } = params;
     try {
       return await axios.get(GIPHY_BASEURL + 'gifs/trending', {
-        params: { api_key: GIPHY_API, limit, offset },
+        params: { api_key: GIPHY_API, limit, offset, rating: 'g' },
       });
     } catch (e) {
       throw e;

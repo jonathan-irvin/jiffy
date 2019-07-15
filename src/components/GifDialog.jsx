@@ -81,6 +81,20 @@ class GifDialogRaw extends React.Component {
     }
   }
 
+  async removeGifFromCategory(id) {
+    this.setState({ isLoading: true });
+    try {
+      let response = await CategoryGifsService.removeGifFromCategory(id);
+      if (response && response.status === 200) {
+        let data = response.data;
+        console.log('Gif removed from category', data);
+        this.handleOk();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   onError() {
     this.setState({
       url: null,
@@ -88,10 +102,17 @@ class GifDialogRaw extends React.Component {
   }
 
   render() {
-    const { gif, gifId, isProfile, categories, ...other } = this.props;
+    const {
+      gif,
+      gifId,
+      isProfile,
+      isCategoryDetails,
+      categories,
+      ...other
+    } = this.props;
+
     return (
-      gif &&
-      gifId && (
+      gif && (
         <Dialog
           maxWidth="md"
           onEntering={this.handleEntering}
@@ -111,7 +132,7 @@ class GifDialogRaw extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            {isProfile ? (
+            {isProfile && (
               <div>
                 {categories &&
                   categories.map(category => {
@@ -135,13 +156,26 @@ class GifDialogRaw extends React.Component {
                   Remove
                 </Button>
               </div>
-            ) : (
+            )}
+            {!isProfile && !isCategoryDetails ? (
               <Button
                 onClick={this.saveGifToInventory.bind(this, gif)}
                 color="primary"
               >
                 Save
               </Button>
+            ) : (
+              ''
+            )}
+            {isCategoryDetails && gifId ? (
+              <Button
+                onClick={this.removeGifFromCategory.bind(this, gifId)}
+                color="primary"
+              >
+                Remove
+              </Button>
+            ) : (
+              ''
             )}
             <Button onClick={this.handleCancel} color="primary">
               Close
@@ -194,7 +228,15 @@ class GifDialog extends React.Component {
   };
 
   render() {
-    const { classes, user, isProfile, gif, gifId, categories } = this.props;
+    const {
+      classes,
+      user,
+      isProfile,
+      gif,
+      gifId,
+      categories,
+      isCategoryDetails,
+    } = this.props;
 
     let image =
       gif.images && gif.images.original.height > gif.images.original.width
@@ -228,6 +270,7 @@ class GifDialog extends React.Component {
             gif={gif}
             gifId={gifId}
             isProfile={isProfile}
+            isCategoryDetails={isCategoryDetails}
             categories={categories}
           />
         </div>

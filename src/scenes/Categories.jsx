@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { CategoryService } from '../services';
 import { Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Link } from 'react-router-dom';
+import CreateCategoryDialog from '../components/CreateCategoryDialog';
 
 export default class Categories extends Component {
   state = { categories: null, isLoading: null };
@@ -60,7 +62,7 @@ export default class Categories extends Component {
     const { categories, isLoading } = this.state;
     return (
       <div style={{ margin: 24 }}>
-        <h2>My Categories</h2>
+        <h2>{'My Categories'}</h2>
         {isLoading ? (
           'Loading...'
         ) : (
@@ -68,9 +70,16 @@ export default class Categories extends Component {
             {categories &&
               categories.map(category => {
                 return (
-                  <li>
+                  <li key={category.id}>
                     <h3>
-                      {category.categoryName}{' '}
+                      <Button>
+                        <Link
+                          to={'/category/' + category.id}
+                          style={{ textDecoration: 'none' }}
+                        >
+                          {category.categoryName}{' '}
+                        </Link>
+                      </Button>
                       <Button
                         onClick={this.deleteCategory.bind(this, category.id)}
                       >
@@ -82,6 +91,7 @@ export default class Categories extends Component {
               })}
           </ul>
         )}
+        <CreateCategoryDialog user={this.props.user} />
       </div>
     );
   }

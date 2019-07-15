@@ -56,8 +56,8 @@ export default function MainMenu() {
         <Link to={'/'} className={classes.link}>
           <MenuItem onClick={handleClose}>Find Gifs</MenuItem>
         </Link>
-        <Link to={'/profile'} className={classes.link}>
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <Link to={'/inventory'} className={classes.link}>
+          <MenuItem onClick={handleClose}>My GIF Inventory</MenuItem>
         </Link>
         <Link to={'/categories'} className={classes.link}>
           <MenuItem onClick={handleClose}>My Categories</MenuItem>

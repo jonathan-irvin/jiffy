@@ -5,12 +5,17 @@ import 'firebase/auth';
 import firebaseConfig from './firebaseConfig';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+//Components
 import NavBar from './components/NavBar';
+
+//Scenes
 import Main from './scenes/Main';
 import Inventory from './scenes/Inventory';
 import Categories from './scenes/Categories';
+import CategoryDetails from './scenes/CategoryDetails';
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+//Auth Interceptor
+import axios from 'axios';
 
 class App extends Component {
   componentWillReceiveProps(nextProps) {
@@ -44,17 +49,31 @@ class App extends Component {
             path={'/categories'}
             render={props => user && <Categories {...props} user={user} />}
           />
+
+          <Route
+            path={'/category/:id'}
+            render={props => user && <CategoryDetails {...props} user={user} />}
+          />
         </Router>
       </div>
     );
   }
 }
 
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 const firebaseAppAuth = firebaseApp.auth();
-
 const providers = {
   googleProvider: new firebase.auth.GoogleAuthProvider(),
 };
+// axios.interceptors.request.use(
+//   async config => {
+//     config.headers.token = await firebaseAppAuth.currentUser.getIdToken();
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   }
+// );
 
 export default withFirebaseAuth({
   providers,

@@ -43,7 +43,7 @@ class GifGrid extends Component {
   }
   render() {
     let { classes, categories } = this.state;
-    let { gifs, user, width, isProfile } = this.props;
+    let { gifs, user, width, isProfile, isCategoryDetails } = this.props;
 
     const getGridListCols = () => {
       if (isWidthUp('xl', width)) {
@@ -68,7 +68,7 @@ class GifGrid extends Component {
       <div style={{ marginTop: 24 }}>
         <Typography variant="h5">{this.props.title}</Typography>
 
-        {gifs && gifs.length ? (
+        {gifs && gifs.length >= 1 ? (
           <div className={classes.root}>
             <GridList
               cellHeight={'auto'}
@@ -79,9 +79,10 @@ class GifGrid extends Component {
                 return (
                   <GridListTile key={gif.id} cols={gif.cols || 1}>
                     <GifDialog
-                      gif={isProfile ? gif.gifData : gif}
-                      gifId={isProfile && gif.id}
+                      gif={isProfile || isCategoryDetails ? gif.gifData : gif}
+                      gifId={(isProfile || isCategoryDetails) && gif.id}
                       isProfile={isProfile}
+                      isCategoryDetails={isCategoryDetails}
                       user={user}
                       categories={categories}
                     />
