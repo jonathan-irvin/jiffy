@@ -6,9 +6,9 @@ import firebaseConfig from './firebaseConfig';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import NavBar from './components/NavBar';
-import Main from './components/Main';
-import Inventory from './components/Inventory';
-import Categories from './components/Categories';
+import Main from './scenes/Main';
+import Inventory from './scenes/Inventory';
+import Categories from './scenes/Categories';
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 

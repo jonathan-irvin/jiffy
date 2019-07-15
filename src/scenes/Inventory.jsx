@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import GifGrid from './GifGrid';
+import GifGrid from '../components/GifGrid';
 import { GifService } from '../services';
 
 const useStyles = makeStyles(theme => ({

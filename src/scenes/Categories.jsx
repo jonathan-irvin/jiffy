@@ -4,11 +4,12 @@ import { Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 export default class Categories extends Component {
-  state = { categories: null };
+  state = { categories: null, isLoading: null };
   componentWillMount() {
     this.getAllCategories();
   }
   async getAllCategories() {
+    this.setState({ isLoading: true });
     try {
       let response = await CategoryService.getAllCategories();
       if (response && response.status === 200) {
@@ -16,6 +17,7 @@ export default class Categories extends Component {
 
         this.setState({
           categories: data,
+          isLoading: false,
         });
       }
     } catch (error) {
@@ -53,28 +55,33 @@ export default class Categories extends Component {
       console.error(error);
     }
   }
+
   render() {
-    const { categories } = this.state;
+    const { categories, isLoading } = this.state;
     return (
       <div style={{ margin: 24 }}>
         <h2>My Categories</h2>
-        <ul>
-          {categories &&
-            categories.map(category => {
-              return (
-                <li>
-                  <h3>
-                    {category.categoryName}{' '}
-                    <Button
-                      onClick={this.deleteCategory.bind(this, category.id)}
-                    >
-                      <DeleteIcon />
-                    </Button>
-                  </h3>
-                </li>
-              );
-            })}
-        </ul>
+        {isLoading ? (
+          'Loading...'
+        ) : (
+          <ul>
+            {categories &&
+              categories.map(category => {
+                return (
+                  <li>
+                    <h3>
+                      {category.categoryName}{' '}
+                      <Button
+                        onClick={this.deleteCategory.bind(this, category.id)}
+                      >
+                        <DeleteIcon />
+                      </Button>
+                    </h3>
+                  </li>
+                );
+              })}
+          </ul>
+        )}
       </div>
     );
   }

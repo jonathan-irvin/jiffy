@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SearchBar from './SearchBar';
+import SearchBar from '../components/SearchBar';
 import { Grid, Typography } from '@material-ui/core';
 
 export default class Main extends Component {
