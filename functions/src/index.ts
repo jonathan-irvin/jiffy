@@ -349,18 +349,23 @@ app.get('/category/:id/gifs', async (request, response) => {
 
     const gifs: any = [];
     categoryQuerySnapshot.forEach(async doc => {
-      const gif = await db
-        .collection(GIF_COLLECTION)
-        .doc(doc.data().gifId)
-        .get();
-
-      gifs.push({
-        ...gif,
-      });
+      const gifId = doc.data().gifId;
+      gifs.push({ gifId });
     });
 
-    response.json({ category: category, gifs: gifs });
+    const gifList = await Promise.all(
+      gifs.map(async (gif: { gifId: string }) => {
+        const gifData = await db
+          .collection(GIF_COLLECTION)
+          .doc(gif.gifId)
+          .get();
+        return gifData.data();
+      })
+    );
+
+    response.json({ category: category.data(), gifs: gifList });
   } catch (error) {
+    console.error(error);
     response.status(500).send(error);
   }
 });

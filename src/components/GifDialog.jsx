@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import { GifService, CategoryService, CategoryGifsService } from '../services';
+import { GifService, CategoryGifsService } from '../services';
 
 class GifDialogRaw extends React.Component {
   constructor(props) {

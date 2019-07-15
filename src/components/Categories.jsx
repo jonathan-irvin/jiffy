@@ -39,6 +39,7 @@ export default class Categories extends Component {
       console.error(error);
     }
   }
+
   async deleteCategory(id) {
     try {
       let response = await CategoryService.deleteCategory(id);
