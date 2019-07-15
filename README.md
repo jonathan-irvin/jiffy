@@ -1,14 +1,14 @@
 # Jiffy
 
-(**Demo**)[https://jiffy-110ff.firebaseapp.com/] - (**CHANGELOG**)[CHANGELOG.md]
+[**Demo**](https://jiffy-110ff.firebaseapp.com/) - [**CHANGELOG**](CHANGELOG.md)
 
 ## Getting Started
 
 1. Login to the app using a Google account.
-1. Trending GIFs are shown by default, click on one to select it, and save it to your inventory from the dialog. You can optionally search for any GIFs in the search box.
-1. From the hamburger menu, you can go to Inventory to see your saved GIFs, but you will want to categorize them.
-1. Click on My Categories from the main menu and add some categories like: `haha`, `fails`, `epic`.
-1. Return to your inventory to select GIFs and assign them to categories.
+2. Trending GIFs are shown by default, click on one to select it, and save it to your inventory from the dialog. You can optionally search for any GIFs in the search box.
+3. From the hamburger menu, you can go to Inventory to see your saved GIFs, but you will want to categorize them.
+4. Click on My Categories from the main menu and add some categories like: `haha`, `fails`, `epic`.
+5. Return to your inventory to select GIFs and assign them to categories.
 
 ## Dependencies
 
