@@ -14,9 +14,6 @@ import Inventory from './scenes/Inventory';
 import Categories from './scenes/Categories';
 import CategoryDetails from './scenes/CategoryDetails';
 
-//Auth Interceptor
-import axios from 'axios';
-
 class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.user !== this.props.user) {
@@ -65,15 +62,6 @@ const firebaseAppAuth = firebaseApp.auth();
 const providers = {
   googleProvider: new firebase.auth.GoogleAuthProvider(),
 };
-// axios.interceptors.request.use(
-//   async config => {
-//     config.headers.token = await firebaseAppAuth.currentUser.getIdToken();
-//     return config;
-//   },
-//   error => {
-//     return Promise.reject(error);
-//   }
-// );
 
 export default withFirebaseAuth({
   providers,
