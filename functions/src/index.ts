@@ -350,16 +350,16 @@ app.get('/category/:id/gifs', async (request, response) => {
     const gifs: any = [];
     categoryQuerySnapshot.forEach(async doc => {
       const gifId = doc.data().gifId;
-      gifs.push({ gifId });
+      gifs.push({ id: doc.id, gifId });
     });
 
     const gifList = await Promise.all(
-      gifs.map(async (gif: { gifId: string }) => {
+      gifs.map(async (gif: { id: string; gifId: string }) => {
         const gifData = await db
           .collection(GIF_COLLECTION)
           .doc(gif.gifId)
           .get();
-        return gifData.data();
+        return { id: gif.id, ...gifData.data() };
       })
     );
 
