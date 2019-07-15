@@ -21,6 +21,7 @@ export const webApi = functions.https.onRequest(main);
 //Handy Constants
 const GIF_COLLECTION = 'gifs';
 const CATEGORY_COLLECTION = 'categories';
+const CATEGORYGIFS_COLLECTION = 'categoryGifs';
 
 //GIFs CRUD
 app.post('/gif', async (request, response) => {
@@ -179,7 +180,7 @@ app.delete('/gif/:id', async (request, response) => {
 //CATEGORIES Crud
 app.post('/category', async (request, response) => {
   try {
-    const { userId, categoryName, gifs } = request.body;
+    const { userId, categoryName } = request.body;
     if (!userId) {
       response.status(400).send('Missing userId');
     } else if (!categoryName) {
@@ -188,7 +189,7 @@ app.post('/category', async (request, response) => {
       const data = {
         userId,
         categoryName,
-        gifs,
+
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -232,19 +233,15 @@ app.get('/category/:id', async (request, response) => {
 });
 
 app.get('/categories', async (request, response) => {
-  const { limit, skip, orderBy, direction } = request.params;
   try {
     const categoryQuerySnapshot = await db
       .collection(CATEGORY_COLLECTION)
-      .orderBy(orderBy || 'createdAt', direction || 'desc')
-      .limit(limit || 20)
-      .startAt(skip || 0)
       .get();
     const categories: any = [];
     categoryQuerySnapshot.forEach(doc => {
       categories.push({
         id: doc.id,
-        data: doc.data(),
+        ...doc.data(),
       });
     });
 
@@ -257,16 +254,16 @@ app.get('/categories', async (request, response) => {
 app.put('/category/:id', async (request, response) => {
   try {
     const categoryId = request.params.id;
-    const { categoryName, gifs } = request.body;
+    const { categoryName } = request.body;
 
     if (!categoryId) {
-      response.status(400).send('Missing Cateory id');
+      response.status(400).send('Missing Category id');
     } else if (!categoryName) {
       response.status(400).send('Category name is required');
     } else {
       const data = {
         categoryName,
-        gifs,
+
         updatedAt: new Date(),
       };
       await db
@@ -305,6 +302,90 @@ app.delete('/category/:id', async (request, response) => {
 
       response.json({
         id: categoryId,
+      });
+    }
+  } catch (error) {
+    response.status(500).send(error);
+  }
+});
+
+//Categorized GIFs
+//CATEGORIES Crud
+//Add Gif to category
+app.post('/category/:id/gif/:gifId', async (request, response) => {
+  try {
+    const { id, gifId } = request.params;
+    const data = {
+      categoryId: id,
+      gifId,
+
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const categoryRef = await db.collection(CATEGORYGIFS_COLLECTION).add(data);
+    const newCategory = await categoryRef.get();
+
+    response.json({
+      id: categoryRef.id,
+      data: newCategory.data(),
+    });
+  } catch (error) {
+    response.status(500).send(error);
+  }
+});
+
+app.get('/category/:id/gifs', async (request, response) => {
+  try {
+    const categoryId = request.params.id;
+    const categoryQuerySnapshot = await db
+      .collection(CATEGORYGIFS_COLLECTION)
+      .where('categoryId', '==', categoryId)
+      .get();
+
+    const category = await db
+      .collection(CATEGORY_COLLECTION)
+      .doc(categoryId)
+      .get();
+
+    const gifs: any = [];
+    categoryQuerySnapshot.forEach(async doc => {
+      const gif = await db
+        .collection(GIF_COLLECTION)
+        .doc(doc.data().gifId)
+        .get();
+
+      gifs.push({
+        ...gif,
+      });
+    });
+
+    response.json({ category: category, gifs: gifs });
+  } catch (error) {
+    response.status(500).send(error);
+  }
+});
+
+app.delete('/category/gif/:id', async (request, response) => {
+  try {
+    const id = request.params.id;
+
+    const category = await db
+      .collection(CATEGORYGIFS_COLLECTION)
+      .doc(id)
+      .get();
+
+    if (!category.exists) {
+      response.status(404).send('Category does not exist.');
+    } else if (!id) {
+      response.status(400).send('Missing Category GIF id');
+    } else {
+      await db
+        .collection(CATEGORYGIFS_COLLECTION)
+        .doc(id)
+        .delete();
+
+      response.json({
+        id: id,
       });
     }
   } catch (error) {

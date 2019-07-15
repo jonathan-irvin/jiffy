@@ -7,7 +7,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import NavBar from './components/NavBar';
 import Main from './components/Main';
-import Profile from './components/Profile';
+import Inventory from './components/Inventory';
+import Categories from './components/Categories';
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
@@ -36,12 +37,12 @@ class App extends Component {
             render={props => <Main {...props} user={user} />}
           />
           <Route
-            path={'/profile'}
-            render={props => user && <Profile {...props} user={user} />}
+            path={'/inventory'}
+            render={props => user && <Inventory {...props} user={user} />}
           />
           <Route
             path={'/categories'}
-            render={props => user && <Main {...props} user={user} />}
+            render={props => user && <Categories {...props} user={user} />}
           />
         </Router>
       </div>

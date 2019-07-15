@@ -4,6 +4,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import { makeStyles } from '@material-ui/core/styles';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
+import { CategoryService } from '../services';
 
 import GifDialog from './GifDialog';
 const useStyles = makeStyles(theme => ({
@@ -21,13 +22,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 class GifGrid extends Component {
-  state = { classes: null };
+  state = { classes: null, categories: null };
   componentWillMount() {
     this.setState({ classes: useStyles });
+    this.getAllCategories();
   }
+  async getAllCategories() {
+    try {
+      let response = await CategoryService.getAllCategories();
+      if (response && response.status === 200) {
+        let data = response.data;
 
+        this.setState({
+          categories: data,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
   render() {
-    let { classes } = this.state;
+    let { classes, categories } = this.state;
     let { gifs, user, width, isProfile } = this.props;
 
     const getGridListCols = () => {
@@ -68,6 +83,7 @@ class GifGrid extends Component {
                       gifId={isProfile && gif.id}
                       isProfile={isProfile}
                       user={user}
+                      categories={categories}
                     />
                   </GridListTile>
                 );

@@ -17,6 +17,10 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  link: {
+    textDecoration: 'none',
+    color: '#333',
+  },
 }));
 
 export default function MainMenu() {
@@ -49,11 +53,14 @@ export default function MainMenu() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Link to={'/'}>
+        <Link to={'/'} className={classes.link}>
           <MenuItem onClick={handleClose}>Find Gifs</MenuItem>
         </Link>
-        <Link to={'/profile'}>
+        <Link to={'/profile'} className={classes.link}>
           <MenuItem onClick={handleClose}>Profile</MenuItem>
+        </Link>
+        <Link to={'/categories'} className={classes.link}>
+          <MenuItem onClick={handleClose}>My Categories</MenuItem>
         </Link>
       </Menu>
     </div>

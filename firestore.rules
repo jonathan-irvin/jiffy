@@ -8,17 +8,17 @@ service cloud.firestore {
 
     match /gifs/{document=**}{
       allow read, update, delete: if isOwner(userId) && isSignedIn();
-      allow create: if request.auth != null;
+      allow create: if isSignedIn();
     }
 
     match /categories/{document=**}{
       allow read, update, delete: if isOwner(userId)&& isSignedIn();
-      allow create: if request.auth != null;
+      allow create: if isSignedIn();
     }
 
     match /gifCategories/{document=**}{
-      allow read, update, delete: if isOwner(userId)&& isSignedIn();
-      allow create: if request.auth != null;
+      allow read, update, delete: if isSignedIn();
+      allow create: if isSignedIn();
     }
 
     function isOwner(userId) {

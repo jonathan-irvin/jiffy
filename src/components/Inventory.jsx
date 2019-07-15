@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-class Profile extends Component {
+class Inventory extends Component {
   state = {
     classes: null,
     gifs: null,
@@ -79,4 +79,4 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+export default Inventory;

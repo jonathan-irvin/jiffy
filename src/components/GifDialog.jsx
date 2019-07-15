@@ -6,12 +6,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import { GifService, CategoryService } from '../services';
+import { GifService, CategoryService, CategoryGifsService } from '../services';
 
 class GifDialogRaw extends React.Component {
   constructor(props) {
     super();
-    this.state = { gif: props.gif };
+    this.state = { gif: props.gif, categories: null };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -19,8 +19,6 @@ class GifDialogRaw extends React.Component {
       this.setState({ gif: this.props.gif });
     }
   }
-
-  handleEntering = () => {};
 
   handleCancel = () => {
     this.props.onCancel(this.props.gif);
@@ -64,15 +62,18 @@ class GifDialogRaw extends React.Component {
     }
   }
 
-  async saveGifToCategory(gif) {
-    const { user } = this.props;
+  async saveGifToCategory(categoryId) {
+    const { gifId } = this.props;
 
     this.setState({ isLoading: true });
     try {
-      let response = await CategoryService.addGifToProfile(user.uid, gif);
+      let response = await CategoryGifsService.addGifToCategory(
+        categoryId,
+        gifId
+      );
       if (response && response.status === 200) {
         let data = response.data;
-        console.log('Gif Saved to Profile', data);
+        console.log('Gif Saved to Category', data);
         this.handleOk();
       }
     } catch (error) {
@@ -87,48 +88,67 @@ class GifDialogRaw extends React.Component {
   }
 
   render() {
-    const { gif, gifId, isProfile, ...other } = this.props;
-
+    const { gif, gifId, isProfile, categories, ...other } = this.props;
     return (
-      <Dialog
-        maxWidth="md"
-        onEntering={this.handleEntering}
-        aria-labelledby="confirmation-dialog-title"
-        {...other}
-      >
-        <DialogTitle id="confirmation-dialog-title">{gif.title}</DialogTitle>
-        <DialogContent>
-          <img
-            src={gif.images.original.url}
-            alt={'Gif'}
-            style={{
-              display: 'block',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          {isProfile ? (
-            <Button
-              onClick={this.removeGifFromInventory.bind(this, gifId)}
-              color="primary"
-            >
-              Remove
+      gif &&
+      gifId && (
+        <Dialog
+          maxWidth="md"
+          onEntering={this.handleEntering}
+          aria-labelledby="confirmation-dialog-title"
+          {...other}
+        >
+          <DialogTitle id="confirmation-dialog-title">{gif.title}</DialogTitle>
+          <DialogContent>
+            <img
+              src={gif.images.original.url}
+              alt={'Gif'}
+              style={{
+                display: 'block',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            {isProfile ? (
+              <div>
+                {categories &&
+                  categories.map(category => {
+                    return (
+                      <Button
+                        onClick={this.saveGifToCategory.bind(
+                          this,
+                          category.id,
+                          gifId
+                        )}
+                        color="primary"
+                      >
+                        Save to {category.categoryName}
+                      </Button>
+                    );
+                  })}
+                <Button
+                  onClick={this.removeGifFromInventory.bind(this, gifId)}
+                  color="primary"
+                >
+                  Remove
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={this.saveGifToInventory.bind(this, gif)}
+                color="primary"
+              >
+                Save
+              </Button>
+            )}
+            <Button onClick={this.handleCancel} color="primary">
+              Close
             </Button>
-          ) : (
-            <Button
-              onClick={this.saveGifToInventory.bind(this, gif)}
-              color="primary"
-            >
-              Save
-            </Button>
-          )}
-          <Button onClick={this.handleCancel} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </DialogActions>
+        </Dialog>
+      )
     );
   }
 }
@@ -148,9 +168,6 @@ const styles = theme => ({
     height: 640,
   },
 
-  playIcon: {
-    position: 'flex',
-  },
   margin: {
     margin: theme.spacing.unit,
   },
@@ -177,7 +194,7 @@ class GifDialog extends React.Component {
   };
 
   render() {
-    const { classes, user, isProfile, gif, gifId } = this.props;
+    const { classes, user, isProfile, gif, gifId, categories } = this.props;
 
     let image =
       gif.images && gif.images.original.height > gif.images.original.width
@@ -211,6 +228,7 @@ class GifDialog extends React.Component {
             gif={gif}
             gifId={gifId}
             isProfile={isProfile}
+            categories={categories}
           />
         </div>
       )

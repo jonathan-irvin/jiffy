@@ -1,12 +1,11 @@
 import axios from 'axios';
 const BASEURL = process.env.REACT_APP_API_BASEURL;
 export default class CategoryService {
-  static async createCategory(userId, categoryName, gifs) {
+  static async createCategory(userId, categoryName) {
     try {
       return await axios.post(BASEURL + 'category', {
         userId: userId,
         categoryName: categoryName,
-        gifs: gifs,
       });
     } catch (e) {
       throw e;
@@ -21,7 +20,7 @@ export default class CategoryService {
     }
   }
 
-  static async getAllCategories(id) {
+  static async getAllCategories() {
     try {
       return await axios.get(BASEURL + 'categories');
     } catch (e) {
@@ -29,11 +28,10 @@ export default class CategoryService {
     }
   }
 
-  static async updateCategory(id, categoryName, gifs) {
+  static async updateCategory(id, categoryName) {
     try {
       return await axios.put(BASEURL + 'category/' + id, {
         categoryName: categoryName,
-        gifs: gifs,
       });
     } catch (e) {
       throw e;
