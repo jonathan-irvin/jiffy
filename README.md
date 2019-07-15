@@ -1,4 +1,66 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Jiffy
+
+(**Demo**)[https://jiffy-110ff.firebaseapp.com/] - (**CHANGELOG**)[CHANGELOG.md]
+
+## Getting Started
+
+1. Login to the app using a Google account.
+1. Trending GIFs are shown by default, click on one to select it, and save it to your inventory from the dialog. You can optionally search for any GIFs in the search box.
+1. From the hamburger menu, you can go to Inventory to see your saved GIFs, but you will want to categorize them.
+1. Click on My Categories from the main menu and add some categories like: `haha`, `fails`, `epic`.
+1. Return to your inventory to select GIFs and assign them to categories.
+
+## Dependencies
+
+- Node 8+
+- Firebase Tools CLI
+
+## Install/Setup
+
+- Install Node.js
+- Install Firebase Tools CLI
+- Obtain a GIPHY API Key
+- `npm install`
+- Create a Firebase App
+- Create a .env file with the following contents, filling in the matching parameters you get from Firebase and GIPHY:
+
+```
+REACT_APP_API_KEY=
+REACT_APP_AUTH_DOMAIN=
+REACT_APP_DATABASE_URL=
+REACT_APP_PROJECT_ID=
+REACT_APP_MESSAGING_SENDER_ID=
+REACT_APP_APP_ID=
+REACT_APP_GIPHY_API_KEY=
+REACT_APP_GIPHY_BASEURL=https://api.giphy.com/v1/
+REACT_APP_API_BASEURL=
+```
+
+- `npm start`
+
+## Deployment
+
+`npm run deploy`
+
+## Stack
+
+- Framework: **React**
+- API: **Firebase Cloud Functions**
+- DB: **FireStore**
+- HOSTING: **FireBase Hosting**
+- AUTH: **Google**
+- GIFs: **GIPHY**
+
+## File/Folder Structure
+
+- build/ - build output
+- functions/ - api code
+- public/ - bootstrap react html
+- src/ - project source code
+  - components/ - reusable components throughtout the app
+  - helpers/ - utility functions
+  - scenes/ - presentation-layer components used in routes
+  - services/ - api functions to call endpoints
 
 ## Available Scripts
 
@@ -27,42 +89,6 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run deploy`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Specifically added for Firebase. This will build the project to output artifacts to the `build/` folder and then deploy FireBase.
