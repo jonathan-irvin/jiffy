@@ -79,6 +79,6 @@
     "@semantic-release/release-notes-generator": "^7.2.1",
     "install": "^0.13.0",
     "npm": "^6.10.1",
-    "semantic-release": "^15.13.18"
+    "semantic-release": "^17.2.3"
   }
 }
